@@ -1,94 +1,94 @@
 <template>
-    <div>
-        <h1 class="text-2xl font-bold mb-3">Monitoreo</h1>
-        <div class="flex flex-row flex-wrap my-2 justify-between mb-3">
-            <!-- Llamamos al componente CardEstadoModelo y le pasamos los props -->
-            <ModelStatusCard :status="status" :isActive="true" :onToggleStatus="onToggleStatus"
-                :isModelStarting="isModelStarting" :disabled="isModelStarting" />
-        </div>
-        <div class="flex flex-row flex-wrap my-2 justify-between">
-            <ParkingImageCard />
-        </div>
+  <div>
+    <h1 class="text-2xl font-bold mb-5">Monitoreo</h1>
+
+    <div v-if="isCamerasLoading" class="text-center">
+      <p>Loading cameras...</p>
     </div>
+
+    <div v-else class="overflow-x-auto">
+      <table class="min-w-full table-auto border-collapse bg-white shadow-lg rounded-lg">
+        <thead class="bg-gray-100 border-b border-gray-300">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">ID</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Descripcion</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Intervalo de imagen</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Maximos resultados</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Parking Spot</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Fecha de creacion</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="camera in cameras" :key="camera._id" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3 text-sm text-gray-800 whitespace-nowrap">{{ camera._id }}</td>
+            <td class="px-4 py-3 text-sm text-gray-800 whitespace-nowrap">{{ camera.identifier }}</td>
+            <td class="px-4 py-3 text-sm text-gray-800 whitespace-nowrap">{{ camera.image_interval }}</td>
+            <td class="px-4 py-3 text-sm text-gray-800 whitespace-nowrap">{{ camera.max_results }}</td>
+            <td class="px-4 py-3 text-sm text-gray-800 whitespace-nowrap">
+              {{ camera.parking_spot.name }} ({{ camera.parking_spot.address }})
+            </td>
+            <td class="px-4 py-3 text-sm text-gray-800 whitespace-nowrap">{{ new
+              Date(camera.created_at).toLocaleString() }}</td>
+            <td class="px-4 py-3 text-center">
+              <button
+                class="px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded shadow focus:outline-none focus:ring"
+                @click="handleMonitor(camera)">
+                Monitoreo
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import { ActivateModelUseCase } from '../../domain/use_cases/activate_model_use_case';
-import { DeactivateModelUseCase } from '../../domain/use_cases/deactivate_model_use_case';
-import { ModelRepositoryImpl } from '../../data/repositories/model_repository_impl';
-import { ModelRemoteDataSource } from '../../data/datasource/model_remote_datasource';
-import ModelStatusCard from '../components/model_status_card.vue'
-import ParkingImageCard from '../components/parking_image_card.vue'
-import CardEstadoModelo from '../components/CardEstadoModelo.vue';
-import { CheckModelStatusUseCase } from '../../domain/use_cases/check_model_state_use_case';
-import { ModelStatusResponse } from '../../domain/models/model_status_response';
+import { useRouter } from 'vue-router';
+import { ref, onMounted, Ref } from 'vue';
+import { FetchCamerasUseCase } from '../../domain/use_cases/fetch_camera_use_cases'
+import { CameraRemoteDataSource } from '../../data/datasource/camera_remote_data_source';
+import { CameraRepositoryImpl } from '../../data/repositories/camera_repository_impl';
+import { Result } from '../../../../core/result';
+import { CameraResponse } from '../../domain/models/camera_response';
+import { Camera } from '../../domain/entities/camera';
 
-// Instanciar las dependencias necesarias
-const remoteDataSource = new ModelRemoteDataSource();
-const repository = new ModelRepositoryImpl(remoteDataSource);
-const checkModelStatusUseCase = new CheckModelStatusUseCase(repository);
-const activateModelUseCase = new ActivateModelUseCase(repository);
-const deactivateModelUseCase = new DeactivateModelUseCase(repository);
+// Vue Router
+const router = useRouter();
 
-const isModelStarting = ref(false);
-const isActive = ref(false);
-const status = ref("APAGADO");
+// State
+const isCamerasLoading = ref(true);
+const cameras: Ref<Camera[]> = ref([]);
 
-function setToggleStatus(newStatus: boolean) {
-    isActive.value = newStatus;
-    status.value = isActive.value ? "ACTIVO" : "ACTIVO";
-}
+// Dependencies
+const remoteDataSource = new CameraRemoteDataSource();
+const repository = new CameraRepositoryImpl(remoteDataSource);
+const fetchCamerasUseCase = new FetchCamerasUseCase(repository);
 
-function setIsModelStarting(isActive: boolean) {
-    if (isActive) {
-        isModelStarting.value = true;
-        setTimeout(() => {
-            isModelStarting.value = false;
-            alert("Model started successfully");
-        }, 300000);
+// Fetch cameras
+async function fetchCameras() {
+  const response: Result<CameraResponse, Error> = await fetchCamerasUseCase.execute();
+  response.fold(
+    (error) => alert(`error: ${error}`),
+    (success) => {
+      isCamerasLoading.value = false;
+      cameras.value = success.data; // Update the cameras array
     }
+  );
 }
 
-async function onToggleStatus() {
-    setToggleStatus(!isActive.value);
-    const response: Result<void, Error> = isActive.value
-        ? await activateModelUseCase.execute()
-        : await deactivateModelUseCase.execute();
-    response.fold(
-        (error) => {
-            alert("Error al cambiar el estado: " + error.message);
-            setToggleStatus(!isActive.value);
-        },
-        (success) => {
-            if (isActive.value && success.success) {
-                setIsModelStarting(isActive.value);
-                alert("Model is starting");
-            }
-            if(!isActive.value && success.success) {
-                alert("Model stopped successfully");
-            }
-        }
-    );
+// Handle action button click
+function handleMonitor(camera: Camera) {
+  router.push(`/parking-lot-monitoring/${camera._id}`);
 }
 
-async function checkModelStatus() {
-    isModelStarting.value = true;
-    const response: Result<ModelStatusResponse, Error> = await checkModelStatusUseCase.execute();
-    isModelStarting.value = false;
-
-    response.fold(
-        (error) => {
-            alert("Error al obtener el estado del modelo: " + error.message);
-        },
-        (success: ModelStatusResponse) => {
-            setToggleStatus(success.is_running);
-        }
-    )
-}
-
+// Fetch data when the component is mounted
 onMounted(() => {
-    checkModelStatus();
+  fetchCameras();
 });
-
 </script>
+
+<style>
+/* Tailwind styles will handle most of the design */
+</style>

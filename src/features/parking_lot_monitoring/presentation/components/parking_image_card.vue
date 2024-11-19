@@ -4,20 +4,26 @@
             <h3 class="text-gray-500">Monitoreo parking #1</h3>
             <div class="flex gap-4 justify-around">
                 <h3 class="text-2xl font-semibold">Lugares disponibles:
-                    <span class="text-green-500">{{ available }} / {{ total }} </span>
+                    <span class="text-green-500">{{ free_spaces }} / {{ total }} </span>
                 </h3>
                 <h3 class="text-2xl font-semibold">Lugares ocupados:
-                    <span class="text-red-500">{{ occupied }} / {{ total }} </span>
+                    <span class="text-red-500">{{ occupied_spaces }} / {{ total }} </span>
                 </h3>
             </div>
             <div class="flex gap-4 justify-center">
-                <img src="../../../../assets/images/labeled-parking-image.png" class="w-fit rounded-lg">
+                <img :src=image class="w-fit rounded-lg">
             </div>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-const available = 0;
-const occupied = 10;
-const total = 10;
+import { defineProps } from 'vue';
+
+const props = defineProps<{
+    free_spaces: number;
+    occupied_spaces: number;
+    total: number;
+    image: string;
+}>();
+
 </script>

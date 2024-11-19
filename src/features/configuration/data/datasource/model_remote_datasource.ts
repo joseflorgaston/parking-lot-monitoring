@@ -6,15 +6,15 @@ import { StopModelResponse } from "../../domain/models/stop_model_response";
 
 export class ModelRemoteDataSource {
   async checkModelStatus(): Promise<ModelStatusResponse> {
-    const response = await apiClient.get<ModelStatusResponse>('/model-status');
+    const response = await apiClient.get<ModelStatusResponse>('model/status');
     return response.data;
   }
   async activateModel(): Promise<StartModelResponse> {
-    const response = await apiClient.post<StartModelResponse>('/start-model');
+    const response = await apiClient.post<StartModelResponse>('model/start');
     return response.data;
   }
   async deactivateModel(): Promise<StopModelResponse> {
-    const response = await apiClient.post<StopModelResponse>('/stop-model');
+    const response = await apiClient.post<StopModelResponse>('model/stop');
     return response.data;
   }
 }
