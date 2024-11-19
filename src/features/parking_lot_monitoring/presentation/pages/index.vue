@@ -2,10 +2,7 @@
   <div>
     <h1 class="text-2xl font-bold mb-5">Monitoreo</h1>
 
-    <div v-if="isCamerasLoading" class="text-center">
-      <p>Loading cameras...</p>
-    </div>
-
+    <Loading v-if="isCamerasLoading" message="Cargando cámaras..." />
     <div v-else class="overflow-x-auto">
       <table class="min-w-full table-auto border-collapse bg-white shadow-lg rounded-lg">
         <thead class="bg-gray-100 border-b border-gray-300">
@@ -46,6 +43,7 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
+import Loading from '../../../../components/loading.vue'
 import { ref, onMounted, Ref } from 'vue';
 import { FetchCamerasUseCase } from '../../domain/use_cases/fetch_camera_use_cases'
 import { CameraRemoteDataSource } from '../../data/datasource/camera_remote_data_source';

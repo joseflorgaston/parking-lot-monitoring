@@ -2,9 +2,7 @@
     <div>
         <h1 class="text-2xl font-bold mb-5">Monitoreo</h1>
 
-        <div v-if="isImageLoading" class="text-center">
-            <p>Loading image...</p>
-        </div>
+        <Loading v-if="isImageLoading" message="Cargando imagen..." />
         <div v-else>
             <ParkingImageCard :free_spaces="image!.free_spaces" :occupied_spaces="image!.occupied_spaces"
                 :total="image?.free_spaces + image!.occupied_spaces" :image="image!.labeled_image_url" />
@@ -18,6 +16,7 @@ import { ref, onMounted, Ref, onUnmounted } from 'vue';
 import { Result } from '../../../../core/result';
 import { ParkingImage } from '../../domain/entities/parking_image';
 import ParkingImageCard from '../components/parking_image_card.vue';
+import Loading from '../../../../components/loading.vue';
 import { ImageRemoteDataSource } from '../../data/datasource/image_remote_data_source';
 import { ImageRepositoryImpl } from '../../data/repositories/image_repository_impl';
 import { FetchLastImageFromCameraUseCase } from '../../domain/use_cases/fetch_last_image_from_camera_use_case';
