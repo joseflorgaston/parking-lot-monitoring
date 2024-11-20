@@ -1,4 +1,4 @@
-import { Result, success, failure } from '../../../../core/result';
+import { Result, success, failure } from '../../../../core/domain/types/result';
 import { CameraResponse } from '../models/camera_response';
 import { CameraRepository } from '../repositories/camera_repository';
 

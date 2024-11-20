@@ -1,4 +1,4 @@
-import apiClient from "../../../../core/service_client";
+import apiClient from "../../../../config/service_client";
 import { LastImageResponse } from "../../domain/models/last_image_response";
 
 export class ImageRemoteDataSource {

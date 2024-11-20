@@ -1,5 +1,5 @@
 import { ModelRepository } from '../repositories/model_repository';
-import { Result, success, failure } from '../../../../core/result';
+import { Result, success, failure } from '../../../../core/domain/types/result';
 import { StopModelResponse } from '../models/stop_model_response';
 
 export class DeactivateModelUseCase {

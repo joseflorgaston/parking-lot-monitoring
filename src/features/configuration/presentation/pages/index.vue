@@ -17,7 +17,7 @@ import { ModelRemoteDataSource } from '../../../configuration/data/datasource/mo
 import { CheckModelStatusUseCase } from '../../../configuration/domain/use_cases/check_model_state_use_case';
 import { ModelStatusResponse } from '../../../configuration/domain/models/model_status_response';
 import ModelStatusCard from '../components/model_status_card.vue';
-import { Result } from '../../../../core/result';
+import { Result } from '../../../../core/domain/types/result';
 import { StartModelResponse } from '../../../configuration/domain/models/start_model_response';
 import { StopModelResponse } from '../../../configuration/domain/models/stop_model_response';
 

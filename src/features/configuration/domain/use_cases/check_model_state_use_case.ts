@@ -1,5 +1,5 @@
 import { ModelRepository } from '../repositories/model_repository';
-import { Result, success, failure } from '../../../../core/result';
+import { Result, success, failure } from '../../../../core/domain/types/result';
 import { ModelStatusResponse } from '../models/model_status_response';
 
 export class CheckModelStatusUseCase {

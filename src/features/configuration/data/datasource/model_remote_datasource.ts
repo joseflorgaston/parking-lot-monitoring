@@ -1,5 +1,5 @@
 // api_client.ts
-import apiClient from "../../../../core/service_client";
+import apiClient from "../../../../config/service_client";
 import { ModelStatusResponse } from "../../domain/models/model_status_response";
 import { StartModelResponse } from "../../domain/models/start_model_response";
 import { StopModelResponse } from "../../domain/models/stop_model_response";

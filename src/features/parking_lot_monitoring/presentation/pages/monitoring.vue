@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="text-2xl font-bold mb-5">Monitoreo</h1>
+        <h1 class="text-2xl font-bold mb-5">Monitoreo: </h1>
 
         <Loading v-if="isImageLoading" message="Cargando imagen..." />
         <div v-else>
@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { ref, onMounted, Ref, onUnmounted } from 'vue';
-import { Result } from '../../../../core/result';
+import { Result } from '../../../../core/domain/types/result';
 import { ParkingImage } from '../../domain/entities/parking_image';
 import ParkingImageCard from '../components/parking_image_card.vue';
 import Loading from '../../../../components/loading.vue';
@@ -64,7 +64,3 @@ onUnmounted(() => {
 });
 
 </script>
-
-<style>
-/* Tailwind styles will handle most of the design */
-</style>

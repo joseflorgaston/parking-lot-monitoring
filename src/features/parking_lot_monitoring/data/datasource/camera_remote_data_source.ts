@@ -1,4 +1,4 @@
-import apiClient from "../../../../core/service_client";
+import apiClient from "../../../../config/service_client";
 import { CameraResponse } from "../../domain/models/camera_response";
 
 export class CameraRemoteDataSource {

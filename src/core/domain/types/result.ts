@@ -6,7 +6,7 @@ class Success<T> {
   readonly isSuccess = true;
   constructor(public readonly value: T) {}
 
-  fold<U>(onFailure: (error: never) => U, onSuccess: (value: T) => U): U {
+  fold<U>(_onFailure: (error: never) => U, onSuccess: (value: T) => U): U {
     return onSuccess(this.value);
   }
 }
@@ -15,7 +15,7 @@ class Failure<E> {
   readonly isSuccess = false;
   constructor(public readonly error: E) {}
 
-  fold<U>(onFailure: (error: E) => U, onSuccess: (value: never) => U): U {
+  fold<U>(onFailure: (error: E) => U, _onSuccess: (value: never) => U): U {
     return onFailure(this.error);
   }
 }

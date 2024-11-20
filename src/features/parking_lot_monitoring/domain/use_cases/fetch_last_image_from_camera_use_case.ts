@@ -1,4 +1,4 @@
-import { Result, success, failure } from '../../../../core/result';
+import { Result, success, failure } from '../../../../core/domain/types/result';
 import { LastImageResponse } from '../models/last_image_response';
 import { ImageRepository } from '../repositories/image_respository';
 
