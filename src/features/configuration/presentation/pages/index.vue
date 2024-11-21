@@ -1,8 +1,9 @@
 <template>
     <div>
         <h1 class="text-2xl font-bold mb-3">Configuracion</h1>
-        <div class="flex flex-row flex-wrap my-2 justify-between mb-3">
-            <ModelStatusCard :status="status" :isActive="true" :onToggleStatus="onToggleStatus"
+        <Loading v-if="isModelStarting" message="Cargando configuracion..." />
+        <div v-else class="flex flex-row flex-wrap my-2 justify-between mb-3">
+            <ModelStatusCard :status="status" :isActive="isActive" :onToggleStatus="onToggleStatus"
                 :isModelStarting="isModelStarting" :disabled="isModelStarting" />
         </div>
     </div>
@@ -17,6 +18,7 @@ import { ModelRemoteDataSource } from '../../../configuration/data/datasource/mo
 import { CheckModelStatusUseCase } from '../../../configuration/domain/use_cases/check_model_state_use_case';
 import { ModelStatusResponse } from '../../../configuration/domain/models/model_status_response';
 import ModelStatusCard from '../components/model_status_card.vue';
+import Loading from '../../../../components/loading.vue';
 import { Result } from '../../../../core/domain/types/result';
 import { StartModelResponse } from '../../../configuration/domain/models/start_model_response';
 import { StopModelResponse } from '../../../configuration/domain/models/stop_model_response';
@@ -34,7 +36,7 @@ const status = ref("APAGADO");
 
 function setToggleStatus(newStatus: boolean) {
     isActive.value = newStatus;
-    status.value = isActive.value ? "ACTIVO" : "ACTIVO";
+    status.value = newStatus ? "ACTIVO" : "APAGADO";
 }
 
 function setIsModelStarting(isActive: boolean) {
@@ -79,7 +81,7 @@ async function checkModelStatus() {
             alert("Error al obtener el estado del modelo: " + error.message);
         },
         (success: ModelStatusResponse) => {
-            setToggleStatus(success.is_running);
+            setToggleStatus(success.status == "RUNNING");
         }
     )
 }

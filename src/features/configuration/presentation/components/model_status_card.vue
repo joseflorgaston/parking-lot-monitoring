@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue';
 
-const props = defineProps<{
+defineProps<{
     status: string;
     isActive: boolean;
     isModelStarting: boolean;

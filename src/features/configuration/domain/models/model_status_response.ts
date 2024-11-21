@@ -1,6 +1,6 @@
 // ModelStatusResponse.ts
 export interface ModelStatusResponse {
-    is_running: boolean;
+    success: boolean;
     status: string;
   }
   
