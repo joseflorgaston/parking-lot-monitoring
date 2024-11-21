@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h1 class="text-2xl font-bold mb-5">Monitoreo: </h1>
+        <h1 class="text-2xl font-bold mb-5">Monitoreo: {{ selectedCamera?.parking_spot.name }} </h1>
 
         <Loading v-if="isImageLoading" message="Cargando imagen..." />
         <div v-else>
             <ParkingImageCard :free_spaces="image!.free_spaces" :occupied_spaces="image!.occupied_spaces"
-                :total="image?.free_spaces + image!.occupied_spaces" :image="image!.labeled_image_url" />
+                :total="image?.free_spaces + image!.occupied_spaces" :image="image!.labeled_image_url" :camera=selectedCamera!  />
         </div>
     </div>
 </template>
@@ -21,6 +21,11 @@ import { ImageRemoteDataSource } from '../../data/datasource/image_remote_data_s
 import { ImageRepositoryImpl } from '../../data/repositories/image_repository_impl';
 import { FetchLastImageFromCameraUseCase } from '../../domain/use_cases/fetch_last_image_from_camera_use_case';
 import { LastImageResponse } from '../../domain/models/last_image_response';
+import { useCameraStore } from '../store/cameraStore';
+
+// Pinia Store
+const cameraStore = useCameraStore();
+const selectedCamera = cameraStore.selectedCamera;
 
 // Vue Router
 const route = useRoute();

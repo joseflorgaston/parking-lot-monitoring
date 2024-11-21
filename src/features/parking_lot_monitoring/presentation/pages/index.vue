@@ -18,9 +18,13 @@ import { CameraRepositoryImpl } from '../../data/repositories/camera_repository_
 import { Result } from '../../../../core/domain/types/result';
 import { CameraResponse } from '../../domain/models/camera_response';
 import { Camera } from '../../domain/entities/camera';
+import { useCameraStore } from '../store/cameraStore';
 
 // Vue Router
 const router = useRouter();
+
+// Pinia Store
+const cameraStore = useCameraStore();
 
 // State
 const isCamerasLoading = ref(true);
@@ -54,11 +58,13 @@ async function fetchCameras() {
     (success) => {
       isCamerasLoading.value = false;
       cameras.value = success.data;
+      cameraStore.setCameras(success.data);
     }
   );
 }
 
 const navigateToMonitoringPage = (camera: Camera) => {
+  cameraStore.setSelectedCamera(camera);
   router.push(`/parking-lot-monitoring/${camera._id}`);
 };
 
